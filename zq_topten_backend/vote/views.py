@@ -20,7 +20,6 @@ class VoteView(APIView):
     permission_classes = [VotePermission]
     def post(self,request,*args,**kwargs):
         pass
-        # TODO 权限（密码正确才有权限）
         # TODO 验证码模块
         # TODO 检查指纹
         # TODO 检查日期
