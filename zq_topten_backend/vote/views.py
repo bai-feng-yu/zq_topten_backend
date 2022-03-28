@@ -195,9 +195,15 @@ class BasePhotoView(APIView):
             return Response(ReturnMsg(302,'不存在该ID').Data)
         name = candidate.photo
         path = self.BasePath+name
-        with open(path,'rb') as f: #TODO 测试图片不存在
-            data = f.read()
-        return HttpResponse(data,content_type='image/jpg')
+        try:
+            with open(path,'rb') as f:
+                data = f.read()
+            return HttpResponse(data,content_type='image/jpg')
+        except FileNotFoundError:
+            path = self.BasePath+'example.jpg'
+            with open(path,'rb') as f:
+                data = f.read()
+            return HttpResponse(data,content_type='image/jpg')
 
 class PhotoView(BasePhotoView):
     BasePath = PIC_PATH
