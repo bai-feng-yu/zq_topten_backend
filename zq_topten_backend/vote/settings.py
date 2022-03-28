@@ -12,8 +12,8 @@ PERIOD = 7
 BASE_DIR = './zq_topten_backend/'
 PIC_PATH = BASE_DIR+'PIC_PATH/'
 PIC_HIS_PATH = BASE_DIR+'PIC_HISTORY_PATH/'
-PIC_URL = 'Photo/'
-PIC_HIS_URL = 'HistoryPhoto/'
+PIC_URL = '/Photo/'
+PIC_HIS_URL = '/HistoryPhoto/'
 IP_whiteList = (
     # ('192.168.0.233', '192.168.0.233', 10, 100),  添加其为信任的IP, 信任投票次数为每天10次, 本阶段总共100次
     ('127.0.0.1', '127.0.0.1', 6, 60),
