@@ -24,6 +24,9 @@ class Candidate(models.Model):
     intro = models.CharField(u'主要事迹',max_length=1000)
     record = models.CharField(u'每天得票数', max_length=1000, default='0' + (',0' * (PERIOD - 1)))
 
+    def __str__(self):
+        return self.name
+
     def GetPicPath(self):
         return PIC_URL+str(self.show_num)+'/'
 
@@ -94,6 +97,9 @@ class History(models.Model):
 
     def GetPicPath(self):
         return PIC_HIS_URL+str(self.show_num)+'/'
+
+    def __str__(self):
+        return self.name
 
     def __unicode__(self):
         return self.name
