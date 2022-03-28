@@ -15,7 +15,7 @@ DEGREE_CHOICES = (
 class Candidate(models.Model):
     num = models.PositiveIntegerField(u'投票数', default=0)
     name = models.CharField(u'名字', max_length=100)
-    show_num = models.IntegerField(u'编号', default=0)
+    show_num = models.IntegerField(u'编号', default=0, unique=True)
     college = models.CharField(u'院系', max_length=100, blank=True, null=True)
     degree = models.CharField(u'学位', max_length=15, choices=DEGREE_CHOICES, default='under')
     grade = models.CharField(u'年级', max_length=20, blank=True, null=True)
