@@ -221,5 +221,5 @@ class HistoryView(APIView):
         paginator = GeneralPagination()
         pg_history = paginator.paginate_queryset(queryset=queryset,request=request,view=self)
         history_ser = HistorySerializer(instance=pg_history,many = True)
-        return Response(ReturnMsg(200,'获取成功',[paginator.get_paginated_response(history_ser.data)]))
+        return Response(ReturnMsg(200,'获取成功',paginator.get_paginated_response(history_ser.data).data).Data)
         
