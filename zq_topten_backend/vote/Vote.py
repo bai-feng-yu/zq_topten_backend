@@ -110,6 +110,8 @@ def Vote(ip,device,stu,ua,FingerPrint,candidates):
     voter.save()
 
 def IllegalVoteRecord(ip,device,stu,ua,FingerPrint,candidates,IllegalTag,IllegalMsg):
+    if FingerPrint == None:
+        FingerPrint = ''
     illegalVote=IllegalVote(ip = ip,member = stu,device = device,ua = ua,finger_print=FingerPrint,tag = IllegalTag)
     illegalVote.reason = json.dumps(IllegalMsg,ensure_ascii=False)
     illegalVote.save()
