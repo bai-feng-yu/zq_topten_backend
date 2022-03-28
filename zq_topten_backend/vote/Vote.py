@@ -67,7 +67,7 @@ def DeviceLimitJudge(uuid,ua,FingerPrint):
 def StuLimitJudge(Stu):
     StuIllegalTag = 0
     IllegalMsg = []
-    if Stu.date == date.today:
+    if Stu.date == date.today():
         IllegalMsg.append('本日您已进行过投票')
         StuIllegalTag += 32
     return (StuIllegalTag,','.join(IllegalMsg),Stu)
