@@ -11,5 +11,6 @@ urlpatterns = [
     re_path('^HistoryPhoto/(?P<id>\d+)/$',views.HistoryPhotoView.as_view()),
     re_path('^History/$',views.HistoryView.as_view()),
     re_path('^Votestatus/$',views.VotestatusView.as_view()),
+    re_path('^Captcha/$',views.CaptchaView.as_view()),
     re_path('',views.IndexView.as_view())
 ]

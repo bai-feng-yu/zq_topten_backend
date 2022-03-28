@@ -29,23 +29,33 @@ class IndexView(APIView):
     def get(self,request,*args,**kwargs):
         return Response(ReturnMsg(Code=200,Msg='成功获取',Data=['2022珞珈十大风云学子']).Data)
 
+class CaptchaView(APIView):
+    def get(self,request,*args,**kwargs):
+        user_id = 'test'
+        gt = GeetestLib(captcha_id, private_key)
+        status = gt.pre_process(user_id)
+        request.session[gt.GT_STATUS_SESSION_KEY] = status
+        request.session["user_id"] = user_id
+        response_str = gt.get_response_str()
+        return HttpResponse(response_str)
+
 class VoteView(APIView):
     authentication_classes = []
     permission_classes = [VotePermission]
     def post(self,request,*args,**kwargs):
         # TODO 验证码模块
-        # gt = GeetestLib(captcha_id, private_key)
-        # challenge = request.POST.get(gt.FN_CHALLENGE, '')
-        # validate = request.POST.get(gt.FN_VALIDATE, '')
-        # seccode = request.POST.get(gt.FN_SECCODE, '')
-        # status = request.session[gt.GT_STATUS_SESSION_KEY]
-        # user_id = request.session["user_id"]
-        # if status:
-        #     gt_result = gt.success_validate(challenge, validate, seccode, user_id)
-        # else:
-        #     gt_result = gt.failback_validate(challenge, validate, seccode)
-        # if not gt_result:
-        #     return Response(ReturnMsg(Code=400,Msg='验证码无效'))
+        gt = GeetestLib(captcha_id, private_key)
+        challenge = request.POST.get(gt.FN_CHALLENGE, '')
+        validate = request.POST.get(gt.FN_VALIDATE, '')
+        seccode = request.POST.get(gt.FN_SECCODE, '')
+        status = request.session[gt.GT_STATUS_SESSION_KEY]
+        user_id = request.session["user_id"]
+        if status:
+            gt_result = gt.success_validate(challenge, validate, seccode, user_id)
+        else:
+            gt_result = gt.failback_validate(challenge, validate, seccode)
+        if not gt_result:
+            return Response(ReturnMsg(Code=400,Msg='验证码无效'))
         
         IllegalVoteTag = 0
         IllegalVoteMsg = []
