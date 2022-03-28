@@ -8,16 +8,16 @@ class CandidateSerializer(ModelSerializer):
 
     class Meta:
         model = Candidate
-        fields = '__all__'
+        exclude = ('id',)
 
 class HistorySerializer(ModelSerializer):
     photo = CharField(max_length=500, source = 'GetPicPath')
 
     class Meta:
         model = History
-        fields = '__all__'
+        exclude = ('id',)
 
 class AnnouncementSerializer(ModelSerializer):
     class Meta:
         model = Announcement
-        fields = '__all__'
+        exclude = ('id',)
