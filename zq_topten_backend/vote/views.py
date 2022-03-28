@@ -2,6 +2,7 @@ import code
 from curses import noecho
 from dis import show_code
 import imp
+import random
 from msilib.schema import Error
 import uuid
 import xlrd
@@ -124,6 +125,7 @@ class CandidateView(ListModelMixin,RetrieveModelMixin,GenericViewSet):
     def list(self,request,*args,**kwargs):
         # TODO 随机排列
         res = super().list(request,args,kwargs)
+        random.shuffle(res.data)
         return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res).Data)
     def retrieve(self, request, *args, **kwargs):
         try:
