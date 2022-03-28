@@ -173,7 +173,7 @@ class BasePhotoView(APIView):
         if not id:
             return Response(ReturnMsg(301,'缺少ID参数').Data)
         try:
-            candidate = Candidate.objects.get(id = id)
+            candidate = Candidate.objects.get(show_num = id)
         except Candidate.DoesNotExist:
             return Response(ReturnMsg(302,'不存在该ID').Data)
         name = candidate.photo

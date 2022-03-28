@@ -25,7 +25,7 @@ class Candidate(models.Model):
     record = models.CharField(u'每天得票数', max_length=1000, default='0' + (',0' * (PERIOD - 1)))
 
     def GetPicPath(self):
-        return PIC_URL+self.id
+        return PIC_URL+str(self.show_num)+'/'
 
 class Member(models.Model):
     student_id = models.CharField(max_length=13)
@@ -94,7 +94,7 @@ class History(models.Model):
     record = models.CharField(u'每天得票数', max_length=1000, default='0' + (',0' * (PERIOD - 1)))
 
     def GetPicPath(self):
-        return PIC_HIS_URL+self.photo
+        return PIC_HIS_URL+str(self.show_num)+'/'
 
     def __unicode__(self):
         return self.name
