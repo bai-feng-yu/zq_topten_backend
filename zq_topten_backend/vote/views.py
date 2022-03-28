@@ -137,6 +137,8 @@ class CandidateView(ListModelMixin,RetrieveModelMixin,GenericViewSet):
     queryset = Candidate.objects.all()
     serializer_class = CandidateSerializer
     pagination_class = GeneralPagination
+    lookup_url_kwarg = 'id'
+    lookup_field = 'show_num'
     def list(self,request,*args,**kwargs):
         res = super().list(request,args,kwargs)
         random.shuffle(res.data['results'])
