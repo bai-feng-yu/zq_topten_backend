@@ -138,14 +138,13 @@ class CandidateView(ListModelMixin,RetrieveModelMixin,GenericViewSet):
     serializer_class = CandidateSerializer
     pagination_class = GeneralPagination
     def list(self,request,*args,**kwargs):
-        # TODO 随机排列
         res = super().list(request,args,kwargs)
-        random.shuffle(res.data)
-        return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res).Data)
+        random.shuffle(res.data['results'])
+        return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res.data).Data)
     def retrieve(self, request, *args, **kwargs):
         try:
             res = super().retrieve(request, *args, **kwargs)
-            return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res).Data)
+            return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res.data).Data)
         except Http404:
             return Response(ReturnMsg(Code=400,Msg='不存在该候选人').Data)
 
@@ -155,7 +154,7 @@ class AnnoncementsView(ListModelMixin,GenericViewSet):
     pagination_class = GeneralPagination
     def list(self,request,*args,**kwargs):
         res = super().list(request,args,kwargs)
-        return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res).Data)
+        return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res.data).Data)
 
 class ImportView(APIView):
     def get(self,request,*args,**kwargs):
