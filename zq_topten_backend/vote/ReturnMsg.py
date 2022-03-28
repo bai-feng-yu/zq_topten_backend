@@ -5,11 +5,12 @@ class ReturnMsg(object):
     _kwdata = None
 
     def __init__(self,Code = None,Msg = None,Data = None,**kwargs):
-        if Code:
+        if Code != None:
             self._Code  = Code
-        if Msg:
+        if Msg != None:
             self._Msg = Msg
-          
+        if Data != None:
+            self._Data = Data
         self._kwdata = kwargs
 
     @property
