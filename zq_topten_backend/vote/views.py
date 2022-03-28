@@ -1,7 +1,8 @@
 import imp
 import xlrd
+from datetime import date
 from re import T
-from django.http import HttpResponse, QueryDict
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
@@ -10,7 +11,7 @@ from .settings import BASE_DIR #TODO 需要进一步修改路径信息
 from rest_framework.response import Response
 from .ReturnMsg import ReturnMsg
 from .models import Announcement, Member,Candidate,History
-from .settings import PIC_PATH,PIC_HIS_PATH
+from .settings import PIC_PATH,PIC_HIS_PATH,START_DATE,END_DATE
 from .Paginations import GeneralPagination
 from .Serializer import HistorySerializer,CandidateSerializer,AnnouncementSerializer
 from .Permission import VotePermission
@@ -33,16 +34,36 @@ class VoteView(APIView):
         
         # TODO 投票过程
 
+class VotestatusView(APIView):
+    def get(self,request,*args,**kwargs):
+        if START_DATE <= date.today() <= END_DATE:
+            isVoteAvaliable = 1
+            return Response(ReturnMsg(Code=200,Msg='获取成功',isVoteAvaliable = 1,detail = '允许投票').Data)
+        else:
+            isVoteAvaliable = 0
+            return Response(ReturnMsg(Code=200,Msg='获取成功',isVoteAvaliable = 0,detail = '投票过期').Data)
 
-class CandidateView(ListModelMixin,RetrieveModelMixin,GenericViewSet): # TODO 日期检查
+class CandidateView(ListModelMixin,RetrieveModelMixin,GenericViewSet):
     queryset = Candidate.objects.all()
     serializer_class = CandidateSerializer
     pagination_class = GeneralPagination
+    def list(self,request,*args,**kwargs):
+        res = super().list(request,args,kwargs)
+        return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res).Data)
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            res = super().retrieve(request, *args, **kwargs)
+            return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res).Data)
+        except Http404:
+            return Response(ReturnMsg(Code=400,Msg='不存在该候选人').Data)
 
 class AnnoncementsView(ListModelMixin,GenericViewSet):
     queryset = Announcement.objects.all()
     serializer_class = AnnouncementSerializer
     pagination_class = GeneralPagination
+    def list(self,request,*args,**kwargs):
+        res = super().list(request,args,kwargs)
+        return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res).Data)
 
 class ImportView(APIView):
     def get(self,request,*args,**kwargs):
