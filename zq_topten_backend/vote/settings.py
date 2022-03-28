@@ -1,4 +1,5 @@
 import os
+import datetime
 
 IP_NUM = 3      # 每天限制数
 IP_TOTAL = 30    # 每阶限制数
@@ -6,8 +7,8 @@ DEVICE_NUM = 1      # 每天限制数
 DEVICE_TOTAL = 30    # 每阶限制数
 VOTE_MIN = 1
 VOTE_MAX = 5
-START_DATE = '2022-03-28' #TODO 配置项
-END_DATE = '2022-04-04'
+START_DATE = datetime.date(2022,3,28) #TODO 配置项
+END_DATE = datetime.date(2022,4,4)
 PERIOD = 7
 BASE_DIR = './zq_topten_backend/'
 PIC_PATH = BASE_DIR+'PIC_PATH/'
