@@ -116,8 +116,15 @@ class VoteView(APIView):
             ser = CandidateSerializer(instance=rank,many=True)
             Ret = ser.data
             _rank = 0
+            _last = -1
+            _sz = 1
             for ret in Ret:
-                _rank += 1
+                if ret['num'] != _last:
+                    _last = ret['num']
+                    _rank += _sz
+                    _sz = 1
+                else:
+                    _sz += 1
                 ret.update({'rank':_rank})
             return Response(ReturnMsg(Code = 200,Msg='投票成功',Data=Ret).Data)
         else:
