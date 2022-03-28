@@ -2,7 +2,6 @@ from django.urls import re_path,include
 from . import views
 
 urlpatterns = [
-    re_path('',views.IndexView.as_view()),
     re_path('^vote/(?P<id>\d+)/$',views.VoteView.as_view()),
     re_path('^Candidate/$',views.CandidateView.as_view({'get':'list'})),
     re_path('^Candidate/(?P<pk>\d+)/$',views.CandidateView.as_view({'get':'retrieve'})),
@@ -11,5 +10,6 @@ urlpatterns = [
     re_path('^Photo/(?P<id>\d+)/$',views.PhotoView.as_view()),
     re_path('^HistoryPhoto/(?P<id>\d+)/$',views.HistoryPhotoView.as_view()),
     re_path('^HistoryView/$',views.HistoryView.as_view()),
-    re_path('^Votestatus/$',views.VotestatusView.as_view())
+    re_path('^Votestatus/$',views.VotestatusView.as_view()),
+    re_path('',views.IndexView.as_view())
 ]
