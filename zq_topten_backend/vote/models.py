@@ -59,18 +59,18 @@ class Device(models.Model):
         return "%s" % self.uuid
 
 class Voter(models.Model):
-    ip = models.ForeignKey(IP)
-    device = models.ForeignKey(Device)
-    member = models.ForeignKey(Member)
+    ip = models.ForeignKey(IP,on_delete=models.CASCADE)
+    device = models.ForeignKey(Device,on_delete=models.CASCADE)
+    member = models.ForeignKey(Member,on_delete=models.CASCADE)
     ua = models.CharField(u'User Agent', max_length=200)
     finger_print = models.CharField(u'浏览器指纹', max_length=200)
     candidates = models.ManyToManyField(Candidate, blank=True)
     time = models.DateTimeField(auto_now_add=True)
 
 class IllegalVote(models.Model):
-    member = models.ForeignKey(Member)
-    ip = models.ForeignKey(IP)
-    device = models.ForeignKey(Device)
+    member = models.ForeignKey(Member,on_delete=models.CASCADE)
+    ip = models.ForeignKey(IP,on_delete=models.CASCADE)
+    device = models.ForeignKey(Device,on_delete=models.CASCADE)
     reason = models.CharField(u'错误理由', max_length=200)
     tag = models.IntegerField(u'错误标签')
     ua = models.CharField(u'User Agent', max_length=200)
@@ -82,7 +82,6 @@ YEAR_CHOICES =[(i,i) for i in range(2006,datetime.date.today().year,1)]
 
 class History(models.Model):
 
-    num = models.PositiveIntegerField(u'投票数', default=0)
     name = models.CharField(u'名字', max_length=100)
     show_num = models.IntegerField(u'编号', default=0)
     college = models.CharField(u'院系', max_length=100, blank=True, null=True)
@@ -91,7 +90,7 @@ class History(models.Model):
     photo = models.CharField(u'照片文件名', max_length=500, default=u'example.jpg')
     statement = models.CharField(u'宣言', max_length=150)
     intro = models.CharField(u'主要事迹',max_length=1000)
-    record = models.CharField(u'每天得票数', max_length=1000, default='0' + (',0' * (PERIOD - 1)))
+    years = models.IntegerField(u'参选年份', choices=YEAR_CHOICES)
 
     def GetPicPath(self):
         return PIC_HIS_URL+str(self.show_num)+'/'
