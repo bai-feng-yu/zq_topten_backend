@@ -9,5 +9,6 @@ urlpatterns = [
     path('^import/$',views.ImportView.as_view()),
     path('^Photo/(?P<id>\d+)/$',views.PhotoView.as_view()),
     path('^Photo/(?P<id>\d+)/$',views.HistoryPhotoView.as_view()),
-    path('^HistoryView/$',views.HistoryView.as_view())
+    path('^HistoryView/$',views.HistoryView.as_view()),
+    path('^Votestatus/$',views.VotestatusView.as_view())
 ]
