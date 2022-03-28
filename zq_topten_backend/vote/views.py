@@ -55,7 +55,7 @@ class VoteView(APIView):
         else:
             gt_result = gt.failback_validate(challenge, validate, seccode)
         if not gt_result:
-            return Response(ReturnMsg(Code=400,Msg='验证码无效'))
+            return Response(ReturnMsg(Code=400,Msg='验证码无效').Data)
         
         IllegalVoteTag = 0
         IllegalVoteMsg = []
@@ -65,7 +65,7 @@ class VoteView(APIView):
             IllegalVoteMsg.append('获取浏览器指纹失败')
 
         if not START_DATE <= date.today() <= END_DATE:
-            return Response(ReturnMsg(Code = 302,Msg='本阶段投票已经结束').Data)
+            return Response(ReturnMsg(Code = 302,Msg='不在投票时间段内').Data)
 
         IPAddress = request.META.get('REMOTE_ADDR', None)
         if IPAddress == None:
