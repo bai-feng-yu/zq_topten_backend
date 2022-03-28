@@ -1,13 +1,7 @@
-import code
-from curses import noecho
-from dis import show_code
-import imp
 import random
 from msilib.schema import Error
-import uuid
 import xlrd
 import re
-import json
 from datetime import date
 from re import T
 from django.http import Http404, HttpResponse, JsonResponse
@@ -30,6 +24,10 @@ from .Vote import IPLimitJudge,DeviceLimitJudge,StuLimitJudge,Vote,IllegalVoteRe
 captcha_id = "4cc5a993124c4a16c1a1915ce4b510ab"
 private_key = "4d3fc8dad159634daeb90b71d6ff1b5c"
 ak = "wpwAmoUCOmmWjqrOR44QlD42"
+
+class IndexView(APIView):
+    def get(self,request,*args,**kwargs):
+        return Response(ReturnMsg(Code=200,Msg='成功获取',Data=['2022珞珈十大风云学子']).Data)
 
 class VoteView(APIView):
     permission_classes = [VotePermission]
