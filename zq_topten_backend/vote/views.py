@@ -30,21 +30,22 @@ class IndexView(APIView):
         return Response(ReturnMsg(Code=200,Msg='成功获取',Data=['2022珞珈十大风云学子']).Data)
 
 class VoteView(APIView):
+    authentication_classes = []
     permission_classes = [VotePermission]
     def post(self,request,*args,**kwargs):
         # TODO 验证码模块
-        gt = GeetestLib(captcha_id, private_key)
-        challenge = request.POST.get(gt.FN_CHALLENGE, '')
-        validate = request.POST.get(gt.FN_VALIDATE, '')
-        seccode = request.POST.get(gt.FN_SECCODE, '')
-        status = request.session[gt.GT_STATUS_SESSION_KEY]
-        user_id = request.session["user_id"]
-        if status:
-            gt_result = gt.success_validate(challenge, validate, seccode, user_id)
-        else:
-            gt_result = gt.failback_validate(challenge, validate, seccode)
-        if not gt_result:
-            return Response(ReturnMsg(Code=400,Msg='验证码无效'))
+        # gt = GeetestLib(captcha_id, private_key)
+        # challenge = request.POST.get(gt.FN_CHALLENGE, '')
+        # validate = request.POST.get(gt.FN_VALIDATE, '')
+        # seccode = request.POST.get(gt.FN_SECCODE, '')
+        # status = request.session[gt.GT_STATUS_SESSION_KEY]
+        # user_id = request.session["user_id"]
+        # if status:
+        #     gt_result = gt.success_validate(challenge, validate, seccode, user_id)
+        # else:
+        #     gt_result = gt.failback_validate(challenge, validate, seccode)
+        # if not gt_result:
+        #     return Response(ReturnMsg(Code=400,Msg='验证码无效'))
         # TODO 检查指纹
         IllegalVoteTag = 0
         IllegalVoteMsg = []
@@ -73,10 +74,9 @@ class VoteView(APIView):
             return Response(ReturnMsg(Code = 304,Msg='投票异常，请检查浏览器COOKIES是否开启').Data)
         
         # TODO 获取投票人
-        try:
-            candidates = request.POST.getlist('id[]')
-        except:
-            return Response(ReturnMsg(Code = 305,Msg='缺少投票数据' % VOTE_MIN).Data)
+        candidates = request.POST.getlist('id',[])
+        if len(candidates) == 0:
+            return Response(ReturnMsg(Code = 305,Msg='缺少投票数据').Data)
         candidates = list(set(candidates)) # 防止list中有相同ID
         CandidatesList = []
         if len(candidates) < VOTE_MIN:
