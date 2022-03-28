@@ -111,7 +111,7 @@ def Vote(ip,device,stu,ua,FingerPrint,candidates):
 
 def IllegalVoteRecord(ip,device,stu,ua,FingerPrint,candidates,IllegalTag,IllegalMsg):
     illegalVote=IllegalVote(ip = ip,member = stu,device = device,ua = ua,finger_print=FingerPrint,tag = IllegalTag)
-    illegalVote.reason = json.dumps(IllegalMsg)
+    illegalVote.reason = json.dumps(IllegalMsg,ensure_ascii=False)
     illegalVote.save()
     for candidate in candidates:
         illegalVote.candidates.add(candidate)
