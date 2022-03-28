@@ -118,7 +118,7 @@ class VoteView(APIView):
             _rank = 0
             for ret in Ret:
                 _rank += 1
-                ret.update('rank',_rank)
+                ret.update({'rank':_rank})
             return Response(ReturnMsg(Code = 200,Msg='投票成功',Data=Ret).Data)
         else:
             IllegalVoteRecord(IPJudgeResult[2],DeviceJudgeResult[2],StuJudgeResult[2],ua,FingerPrint,CandidatesList,IllegalVoteTag,IllegalVoteMsg)
