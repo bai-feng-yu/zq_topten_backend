@@ -89,7 +89,7 @@ class VoteView(APIView):
                 candy = Candidate.objects.get(show_num = candidate)
                 CandidatesList.append(candy)
             except Candidate.DoesNotExist:
-                return Response(ReturnMsg(Code = 306,Msg='投票数据错误' % VOTE_MAX).Data)
+                return Response(ReturnMsg(Code = 306,Msg='投票数据错误').Data)
         # TODO 判断IP投票限制
 
         IPJudgeResult = IPLimitJudge(IPAddress)
