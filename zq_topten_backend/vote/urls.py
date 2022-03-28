@@ -2,7 +2,7 @@ from django.urls import re_path,include
 from . import views
 
 urlpatterns = [
-    re_path('^vote/(?P<id>\d+)/$',views.VoteView.as_view()),
+    re_path('^vote/$',views.VoteView.as_view()),
     re_path('^Candidate/$',views.CandidateView.as_view({'get':'list'})),
     re_path('^Candidate/(?P<id>\d+)/$',views.CandidateView.as_view({'get':'retrieve'})),
     re_path('^Annoncements/$',views.AnnoncementsView.as_view({'get':'list'})),
