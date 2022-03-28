@@ -113,7 +113,7 @@ class VoteView(APIView):
         if IllegalVoteTag == 0:
             Vote(IPJudgeResult[2],DeviceJudgeResult[2],StuJudgeResult[2],ua,FingerPrint,CandidatesList)
             rank = Candidate.objects.order_by('-num')
-            ser = CandidateSerializer(instance=Candidate,many=True)
+            ser = CandidateSerializer(instance=rank,many=True)
             Ret = ser.data
             _rank = 0
             for ret in Ret:
