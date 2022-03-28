@@ -95,19 +95,19 @@ class VoteView(APIView):
         IPJudgeResult = IPLimitJudge(IPAddress)
         if IPJudgeResult[0] != 0:
             IllegalVoteTag += IPJudgeResult[0]
-            IllegalVoteMsg.append(*IPJudgeResult[1])
+            IllegalVoteMsg.append(IPJudgeResult[1])
 
         # TODO 判断用户投票限制
         
         DeviceJudgeResult = DeviceLimitJudge(uuid,ua,FingerPrint)
         if DeviceJudgeResult[0] != 0:
             IllegalVoteTag += DeviceJudgeResult[0]
-            IllegalVoteMsg.append(*DeviceJudgeResult[1])
+            IllegalVoteMsg.append(DeviceJudgeResult[1])
         
         StuJudgeResult = StuLimitJudge(request.Stu)
         if StuJudgeResult[0] != 0:
             IllegalVoteTag += StuJudgeResult[0]
-            IllegalVoteMsg.append(*StuJudgeResult[1])
+            IllegalVoteMsg.append(StuJudgeResult[1])
         
         # TODO 投票过程
         if IllegalVoteTag == 0:
