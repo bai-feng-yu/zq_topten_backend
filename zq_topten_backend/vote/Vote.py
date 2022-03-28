@@ -25,10 +25,10 @@ def IPLimitJudge(IPAddress):
             else:
                 limit = (IP_NUM,IP_TOTAL)
             if ipAddress.num >= limit[0]:
-                IllegalMsg.append('该IP本日投票已达%d次' % IP_NUM)
+                IllegalMsg.append('该IP本日投票已达%d次' % limit[0])
                 IPIllegalTag += 1
             if ipAddress.num >= limit[1]:
-                IllegalMsg.append('该IP本日投票已达%s次' % IP_TOTAL)
+                IllegalMsg.append('该IP本日投票已达%s次' % limit[1])
                 IPIllegalTag += 2
         else:
             ipAddress.num = 0
