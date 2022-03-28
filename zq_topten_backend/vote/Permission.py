@@ -17,5 +17,6 @@ class VotePermission(BasePermission):
         except:
             self.message = '学号或者密码错误'
             return False
+        request.Stu = member
         return True
             

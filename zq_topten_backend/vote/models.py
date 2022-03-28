@@ -62,6 +62,8 @@ class Voter(models.Model):
     ip = models.ForeignKey(IP)
     device = models.ForeignKey(Device)
     member = models.ForeignKey(Member)
+    ua = models.CharField(u'User Agent', max_length=200)
+    finger_print = models.CharField(u'浏览器指纹', max_length=200)
     candidates = models.ManyToManyField(Candidate, blank=True)
     time = models.DateTimeField(auto_now_add=True)
 
@@ -71,6 +73,8 @@ class IllegalVote(models.Model):
     device = models.ForeignKey(Device)
     reason = models.CharField(u'错误理由', max_length=200)
     tag = models.IntegerField(u'错误标签')
+    ua = models.CharField(u'User Agent', max_length=200)
+    finger_print = models.CharField(u'浏览器指纹', max_length=200)
     candidates = models.ManyToManyField(Candidate, blank=True)
     time = models.DateTimeField(auto_now_add=True)
 
