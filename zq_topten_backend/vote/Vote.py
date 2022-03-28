@@ -35,8 +35,8 @@ def IPLimitJudge(IPAddress):
             ipAddress.date = date.today()
             ipAddress.save()
     except IP.DoesNotExist:
-        ip = IP(ip = ipAddress,num = 0,total = 0)
-        ip.save()
+        ipAddress = IP(ip = IPAddress,num = 0,total = 0)
+        ipAddress.save()
     
     return (IPIllegalTag,','.join(IllegalMsg),ipAddress)
 
@@ -90,6 +90,7 @@ def Vote(ip,device,stu,ua,FingerPrint,candidates):
     stu.save()
 
     voter = Voter(ip = ip,device = device,member = stu, ua = ua,finger_print = FingerPrint)
+    voter.save()
     for candidate in candidates:
         record = candidate.record.split(',')
         days = (date.today() - START_DATE).days
