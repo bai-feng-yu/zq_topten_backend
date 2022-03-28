@@ -8,7 +8,6 @@ class VotePermission(BasePermission):
         user_id = request.POST.get('user_id',None)
         password = request.POST.get('password',None)
         if not (user_id and password):
-            self.code = 400
             self.message = '缺少学号或者密码'
             return False
         try:
@@ -16,7 +15,6 @@ class VotePermission(BasePermission):
             if password != member.password:
                 raise
         except:
-            self.code = 401
             self.message = '学号或者密码错误'
             return False
         return True
