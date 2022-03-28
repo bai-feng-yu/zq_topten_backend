@@ -189,15 +189,18 @@ class ImportView(APIView):
 
 class BasePhotoView(APIView):
     BasePath = ''
+    Model = None
     def get(self,request,*args,**kwargs):
+        if self.Model == None:
+            raise Exception('需要指定模型')
         id = kwargs.get('id',None)
         if not id:
             return Response(ReturnMsg(301,'缺少ID参数').Data)
         try:
-            candidate = Candidate.objects.get(show_num = id)
-        except Candidate.DoesNotExist:
+            model = self.Model.objects.get(show_num = id)
+        except self.Model.DoesNotExist:
             return Response(ReturnMsg(302,'不存在该ID').Data)
-        name = candidate.photo
+        name = model.photo
         path = self.BasePath+name
         try:
             with open(path,'rb') as f:
@@ -211,9 +214,11 @@ class BasePhotoView(APIView):
 
 class PhotoView(BasePhotoView):
     BasePath = PIC_PATH
+    Model = Candidate
 
 class HistoryPhotoView(BasePhotoView):
     BasePath = PIC_HIS_PATH
+    Model = History
 
 class HistoryView(APIView):
     def get(self,request,*args,**kwargs):
