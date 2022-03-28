@@ -197,13 +197,13 @@ class BasePhotoView(APIView):
         path = self.BasePath+name
         with open(path,'rb') as f: #TODO 测试图片不存在
             data = f.read()
-        return HttpResponse(data)
+        return HttpResponse(data,content_type='image/jpg')
 
 class PhotoView(BasePhotoView):
-    BathPath = PIC_PATH
+    BasePath = PIC_PATH
 
 class HistoryPhotoView(BasePhotoView):
-    BathPath = PIC_HIS_PATH
+    BasePath = PIC_HIS_PATH
 
 class HistoryView(APIView):
     def get(self,request,*args,**kwargs):
