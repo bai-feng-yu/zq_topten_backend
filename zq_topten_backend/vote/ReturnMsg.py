@@ -20,7 +20,7 @@ class ReturnMsg(object):
             'Msg' : self._Msg,
         }
         if self._Data != None:
-            ret.update('Data',self._Data)
+            ret.update({'Data':self._Data})
         ret.update(self._kwdata)
         return ret
 
