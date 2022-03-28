@@ -4,14 +4,14 @@ from rest_framework.serializers import ModelSerializer,CharField
 from .models import Candidate,History,Announcement
 class CandidateSerializer(ModelSerializer):
     
-    photo = CharField(u'照片URL', max_length=500, source = 'GetPicPath')
+    photo = CharField(max_length=500, source = 'GetPicPath')
 
     class Meta:
         model = Candidate
         fields = '__all__'
 
 class HistorySerializer(ModelSerializer):
-    photo = CharField(u'照片URL', max_length=500, source = 'GetPicPath')
+    photo = CharField(max_length=500, source = 'GetPicPath')
 
     class Meta:
         model = History
