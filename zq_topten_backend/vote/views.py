@@ -176,7 +176,7 @@ class ImportView(APIView):
     def get(self,request,*args,**kwargs):
         xls_path = BASE_DIR + r'stu_auth.xlsx'  # 数据量超过65535行，只能存储为xlsx格式，且2017年11月后xlrd直接支持xlsx格式，无需指定文件类型
         # UPDATE: xlrd1.2.0之后的版本不支持xlsx格式，只支持xls格式
-        # 需要安装老版本的xlrd,pip install xlrd=1.2.0
+        # 需要安装老版本的xlrd,pip install xlrd==1.2.0
         data = xlrd.open_workbook(xls_path)
         xs_sheet = data.sheet_by_name('stu_auth')
         try:
