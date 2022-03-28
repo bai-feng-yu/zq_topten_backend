@@ -7,6 +7,7 @@ from msilib.schema import Error
 import uuid
 import xlrd
 import re
+import json
 from datetime import date
 from re import T
 from django.http import Http404, HttpResponse, JsonResponse
@@ -14,22 +15,38 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin,RetrieveModelMixin
-from .settings import BASE_DIR #TODO 需要进一步修改路径信息
 from rest_framework.response import Response
+from .settings import BASE_DIR #TODO 需要进一步修改路径信息
 from .ReturnMsg import ReturnMsg
 from .models import Announcement, Device, IllegalVote, Member,Candidate,History
 from .settings import PIC_PATH,PIC_HIS_PATH,START_DATE,END_DATE,VOTE_MIN,VOTE_MAX,IP_whiteList
 from .Paginations import GeneralPagination
 from .Serializer import HistorySerializer,CandidateSerializer,AnnouncementSerializer
 from .Permission import VotePermission
+from .geetest import GeetestLib
 from .Vote import IPLimitJudge,DeviceLimitJudge,StuLimitJudge,Vote,IllegalVoteRecord
 # Create your views here.
+
+captcha_id = "4cc5a993124c4a16c1a1915ce4b510ab"
+private_key = "4d3fc8dad159634daeb90b71d6ff1b5c"
+ak = "wpwAmoUCOmmWjqrOR44QlD42"
 
 class VoteView(APIView):
     permission_classes = [VotePermission]
     def post(self,request,*args,**kwargs):
-        pass
         # TODO 验证码模块
+        gt = GeetestLib(captcha_id, private_key)
+        challenge = request.POST.get(gt.FN_CHALLENGE, '')
+        validate = request.POST.get(gt.FN_VALIDATE, '')
+        seccode = request.POST.get(gt.FN_SECCODE, '')
+        status = request.session[gt.GT_STATUS_SESSION_KEY]
+        user_id = request.session["user_id"]
+        if status:
+            gt_result = gt.success_validate(challenge, validate, seccode, user_id)
+        else:
+            gt_result = gt.failback_validate(challenge, validate, seccode)
+        if not gt_result:
+            return Response(ReturnMsg(Code=400,Msg='验证码无效'))
         # TODO 检查指纹
         IllegalVoteTag = 0
         IllegalVoteMsg = []
