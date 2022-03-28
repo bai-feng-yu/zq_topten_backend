@@ -18,8 +18,9 @@ class ReturnMsg(object):
         ret = {
             'Code' : self._Code,
             'Msg' : self._Msg,
-            'Data' : [] if self._Data == None else self._Data
         }
+        if self._Data != None:
+            ret.update('Data',self._Data)
         ret.update(self._kwdata)
         return ret
 
