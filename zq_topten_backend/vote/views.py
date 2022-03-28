@@ -46,24 +46,22 @@ class VoteView(APIView):
         #     gt_result = gt.failback_validate(challenge, validate, seccode)
         # if not gt_result:
         #     return Response(ReturnMsg(Code=400,Msg='验证码无效'))
-        # TODO 检查指纹
+        
         IllegalVoteTag = 0
         IllegalVoteMsg = []
         FingerPrint = request.POST.get("fingerPrint", None)
         if FingerPrint == None:
             IllegalVoteTag += 64
             IllegalVoteMsg.append('获取浏览器指纹失败')
-        # TODO 检查日期
+
         if not START_DATE <= date.today() <= END_DATE:
             return Response(ReturnMsg(Code = 302,Msg='本阶段投票已经结束').Data)
-        # TODO 检查IP
+
         IPAddress = request.META.get('REMOTE_ADDR', None)
         if IPAddress == None:
             return Response(ReturnMsg(Code = 303,Msg='IP获取失败').Data)
 
         # 地理位置限制IP访问（如只能武汉IP访问），在移动网络情况下误杀率过高
-
-        # TODO 获取客户端信息
 
         uuid = request.COOKIES.get('uuid',None)
         ua = request.META.get('HTTP_USER_AGENT',None)
@@ -73,7 +71,6 @@ class VoteView(APIView):
         if not uuid_regex.match(uuid):
             return Response(ReturnMsg(Code = 304,Msg='投票异常，请检查浏览器COOKIES是否开启').Data)
         
-        # TODO 获取投票人
         candidates = request.POST.getlist('id',[])
         if len(candidates) == 0:
             return Response(ReturnMsg(Code = 305,Msg='缺少投票数据').Data)
@@ -90,14 +87,12 @@ class VoteView(APIView):
                 CandidatesList.append(candy)
             except Candidate.DoesNotExist:
                 return Response(ReturnMsg(Code = 306,Msg='投票数据错误').Data)
-        # TODO 判断IP投票限制
 
         IPJudgeResult = IPLimitJudge(IPAddress)
         if IPJudgeResult[0] != 0:
             IllegalVoteTag += IPJudgeResult[0]
             IllegalVoteMsg.append(IPJudgeResult[1])
 
-        # TODO 判断用户投票限制
         
         DeviceJudgeResult = DeviceLimitJudge(uuid,ua,FingerPrint)
         if DeviceJudgeResult[0] != 0:
@@ -109,7 +104,6 @@ class VoteView(APIView):
             IllegalVoteTag += StuJudgeResult[0]
             IllegalVoteMsg.append(StuJudgeResult[1])
         
-        # TODO 投票过程
         if IllegalVoteTag == 0:
             Vote(IPJudgeResult[2],DeviceJudgeResult[2],StuJudgeResult[2],ua,FingerPrint,CandidatesList)
             rank = Candidate.objects.order_by('-num')
