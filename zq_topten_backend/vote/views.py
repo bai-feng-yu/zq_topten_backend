@@ -129,9 +129,12 @@ class VotestatusView(APIView):
         if START_DATE <= date.today() <= END_DATE:
             isVoteAvaliable = 1
             return Response(ReturnMsg(Code=200,Msg='获取成功',isVoteAvaliable = 1,detail = '允许投票').Data)
+        elif date.today() < START_DATE:
+            isVoteAvaliable = 0
+            return Response(ReturnMsg(Code=200,Msg='获取成功',isVoteAvaliable = 0,detail = '投票未开始').Data)
         else:
             isVoteAvaliable = 0
-            return Response(ReturnMsg(Code=200,Msg='获取成功',isVoteAvaliable = 0,detail = '投票过期').Data)
+            return Response(ReturnMsg(Code=200,Msg='获取成功',isVoteAvaliable = 0,detail = '投票已结束').Data)    
 
 class CandidateView(ListModelMixin,RetrieveModelMixin,GenericViewSet):
     queryset = Candidate.objects.all()
