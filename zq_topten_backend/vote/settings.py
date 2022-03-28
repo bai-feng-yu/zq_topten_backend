@@ -9,12 +9,11 @@ VOTE_MAX = 5
 START_DATE = '2022-03-28' #TODO 配置项
 END_DATE = '2022-04-04'
 PERIOD = 7
-PIC_PATH = './PIC_PATH/'
-PIC_HIS_PATH = './PIC_HISTORY_PATH/'
+BASE_DIR = './zq_topten_backend/'
+PIC_PATH = BASE_DIR+'PIC_PATH/'
+PIC_HIS_PATH = BASE_DIR+'PIC_HISTORY_PATH/'
 PIC_URL = 'Photo/'
 PIC_HIS_URL = 'HistoryPhoto/'
-ROOT_PATH = os.path.dirname(__file__)
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 IP_whiteList = (
     # ('192.168.0.233', '192.168.0.233', 10, 100),  添加其为信任的IP, 信任投票次数为每天10次, 本阶段总共100次
     ('127.0.0.1', '127.0.0.1', 6, 60),
