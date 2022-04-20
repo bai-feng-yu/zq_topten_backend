@@ -2,6 +2,7 @@ import random
 from msilib.schema import Error
 import xlrd
 import re
+import hashlib
 from datetime import date
 from re import T
 from django.http import Http404, HttpResponse, JsonResponse
@@ -185,14 +186,15 @@ class ImportView(APIView):
                 b = xs_sheet.cell(i, 1)
                 bstr = str(b.value)
                 bstr = bstr[bstr.__len__()-7:bstr.__len__()-1]
+                bhash = hashlib.sha256(bstr.encode()).hexdigest()
                 a = str(a.value)
                 if len(a) != 13:
                     continue
                 try:
                     member = Member.objects.get(student_id=a)
-                    member.password = bstr
+                    member.password = bhash
                 except Member.DoesNotExist:
-                    member = Member(student_id=a, password=bstr)
+                    member = Member(student_id=a, password=bhash)
                 member.save()
             return Response(ReturnMsg(200,'导入成功').Data)
         except:
