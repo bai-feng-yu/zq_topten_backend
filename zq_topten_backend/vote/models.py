@@ -32,7 +32,7 @@ class Candidate(models.Model):
 
 class Member(models.Model):
     student_id = models.CharField(max_length=13)
-    password = models.CharField(max_length=6)
+    password = models.CharField(max_length=64)
     date = models.DateField(default='1000-01-01', null=True, blank=True)
 
     def __str__(self):
@@ -88,11 +88,11 @@ class History(models.Model):
     name = models.CharField(u'名字', max_length=100)
     show_num = models.IntegerField(u'编号', default=0)
     college = models.CharField(u'院系', max_length=100, blank=True, null=True)
-    degree = models.CharField(u'学位', max_length=15, choices=DEGREE_CHOICES, default='under')
+    degree = models.CharField(u'学位', max_length=15, choices=DEGREE_CHOICES, default='under',blank=True,null=True)
     grade = models.CharField(u'年级', max_length=20, blank=True, null=True)
     photo = models.CharField(u'照片文件名', max_length=500, default=u'example.jpg')
-    statement = models.CharField(u'宣言', max_length=150)
-    intro = models.CharField(u'主要事迹',max_length=1000)
+    statement = models.CharField(u'宣言', max_length=150,blank=True, null=True)
+    intro = models.CharField(u'主要事迹',max_length=1000,blank=True, null=True)
     years = models.IntegerField(u'参选年份', choices=YEAR_CHOICES)
 
     def GetPicPath(self):
