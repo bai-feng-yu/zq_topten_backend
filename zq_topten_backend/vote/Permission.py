@@ -5,10 +5,13 @@ from .models import Member
 class VotePermission(BasePermission):
     # TODO 传递学号和密码的加密
     def has_permission(self, request, view):
-        user_id = request.POST.get('user_id',None)
+        # print(request.body)
+        # print(request.POST)
+        # print(request.data)
+        user_id = request.data.get('user_id',None)
         if user_id != None:
             user_id = user_id.strip()
-        password = request.POST.get('password',None)
+        password = request.data.get('password',None)
         if password != None:
             password = password.strip()
         if not (user_id and password):
