@@ -1,5 +1,4 @@
 import random
-from msilib.schema import Error
 import xlrd
 import re
 import hashlib
@@ -11,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin,RetrieveModelMixin
 from rest_framework.response import Response
+from rest_framework.parsers import JSONParser,FormParser,MultiPartParser
 from .settings import BASE_DIR #TODO 需要进一步修改路径信息
 from .ReturnMsg import ReturnMsg
 from .models import Announcement, Device, IllegalVote, Member,Candidate,History
@@ -43,15 +43,16 @@ class CaptchaView(APIView):
 class VoteView(APIView):
     authentication_classes = []
     permission_classes = [VotePermission]
+    parser_classes = [JSONParser,FormParser,MultiPartParser]
     def post(self,request,*args,**kwargs):
         # TODO 验证码模块
         gt = GeetestLib(captcha_id, private_key)
-        challenge = request.POST.get(gt.FN_CHALLENGE, '')
-        validate = request.POST.get(gt.FN_VALIDATE, '')
-        seccode = request.POST.get(gt.FN_SECCODE, '')
-        status = request.session[gt.GT_STATUS_SESSION_KEY]
-        user_id = request.session["user_id"]
-        if status:
+        challenge = request.data.get(gt.FN_CHALLENGE, '')
+        validate = request.data.get(gt.FN_VALIDATE, '')
+        seccode = request.data.get(gt.FN_SECCODE, '')
+        status = request.session.get(gt.GT_STATUS_SESSION_KEY,None)
+        user_id = request.session.get("user_id",None)
+        if status and user_id:
             gt_result = gt.success_validate(challenge, validate, seccode, user_id)
         else:
             gt_result = gt.failback_validate(challenge, validate, seccode)
@@ -60,7 +61,7 @@ class VoteView(APIView):
         
         IllegalVoteTag = 0
         IllegalVoteMsg = []
-        FingerPrint = request.POST.get("fingerPrint", None)
+        FingerPrint = request.data.get("fingerPrint", None)
         if FingerPrint == None:
             IllegalVoteTag += 64
             IllegalVoteMsg.append('获取浏览器指纹失败')
@@ -68,21 +69,25 @@ class VoteView(APIView):
         if not START_DATE <= date.today() <= END_DATE:
             return Response(ReturnMsg(Code = 302,Msg='不在投票时间段内').Data)
 
-        IPAddress = request.META.get('REMOTE_ADDR', None)
+        if 'HTTP_X_FORWARDED_FOR' in request.META: # 这样获取可能有问题
+            IPAddress =  request.META['HTTP_X_FORWARDED_FOR']
+        else:
+            IPAddress = request.META.get('REMOTE_ADDR', None)
         if IPAddress == None:
             return Response(ReturnMsg(Code = 303,Msg='IP获取失败').Data)
 
         # 地理位置限制IP访问（如只能武汉IP访问），在移动网络情况下误杀率过高
 
-        uuid = request.COOKIES.get('uuid',None)
+        # uuid = request.COOKIES.get('uuid',None) # 跨domain的cookie遇到一些问题
+        uuid = request.data.get('uuid',None)
         ua = request.META.get('HTTP_USER_AGENT',None)
         if uuid == None or ua == None:
             return Response(ReturnMsg(Code = 304,Msg='投票异常，请检查浏览器COOKIES是否开启').Data)
-        uuid_regex = re.compile(r"[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}")
+        uuid_regex = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
         if not uuid_regex.match(uuid):
             return Response(ReturnMsg(Code = 304,Msg='投票异常，请检查浏览器COOKIES是否开启').Data)
         
-        candidates = request.POST.getlist('id',[])
+        candidates = request.data.get('id',[])
         if len(candidates) == 0:
             return Response(ReturnMsg(Code = 305,Msg='缺少投票数据').Data)
         candidates = list(set(candidates)) # 防止list中有相同ID
@@ -151,12 +156,12 @@ class VotestatusView(APIView):
 class CandidateView(ListModelMixin,RetrieveModelMixin,GenericViewSet):
     queryset = Candidate.objects.all()
     serializer_class = CandidateSerializer
-    pagination_class = GeneralPagination
+#    pagination_class = GeneralPagination
     lookup_url_kwarg = 'id'
     lookup_field = 'show_num'
     def list(self,request,*args,**kwargs):
         res = super().list(request,args,kwargs)
-        random.shuffle(res.data['results'])
+        random.shuffle(res.data)
         return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res.data).Data)
     def retrieve(self, request, *args, **kwargs):
         try:
@@ -168,7 +173,7 @@ class CandidateView(ListModelMixin,RetrieveModelMixin,GenericViewSet):
 class AnnoncementsView(ListModelMixin,GenericViewSet):
     queryset = Announcement.objects.all()
     serializer_class = AnnouncementSerializer
-    pagination_class = GeneralPagination
+#    pagination_class = GeneralPagination
     def list(self,request,*args,**kwargs):
         res = super().list(request,args,kwargs)
         return Response(ReturnMsg(Code=200,Msg='获取成功',Data=res.data).Data)
@@ -236,8 +241,8 @@ class HistoryPhotoView(BasePhotoView):
 class HistoryView(APIView):
     def get(self,request,*args,**kwargs):
         queryset = History.objects.all()
-        paginator = GeneralPagination()
-        pg_history = paginator.paginate_queryset(queryset=queryset,request=request,view=self)
-        history_ser = HistorySerializer(instance=pg_history,many = True)
-        return Response(ReturnMsg(200,'获取成功',paginator.get_paginated_response(history_ser.data).data).Data)
+#        paginator = GeneralPagination()
+#        pg_history = paginator.paginate_queryset(queryset=queryset,request=request,view=self)
+        history_ser = HistorySerializer(instance=queryset,many = True)
+        return Response(ReturnMsg(200,'获取成功',history_ser.data).Data)
         
