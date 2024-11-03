@@ -13,10 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import django_cas_ng.views
 from django.contrib import admin
 from django.urls import path,re_path,include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    re_path('',include('vote.urls'))
+    path('topten_api/admin/', admin.site.urls),
+    path('cas/',django_cas_ng.views.LoginView.as_view(),name='cas_ng_login'),
+    re_path('',include('vote.urls')),
 ]

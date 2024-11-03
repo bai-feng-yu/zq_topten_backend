@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  django:
+    image: zq_topten_backend
+    restart: always
+    container_name: topten-django # 自己项目的名字
+    networks:
+      - app-net
+
+  caddy:
+    image: registry-vpc.cn-hangzhou.aliyuncs.com/ziqiang_studio/caddy:latest
+    depends_on:
+      - django
+    networks:
+      - app-net
+      - traefik
+    labels:
+      traefik.enable: true
+      traefik.http.routers.topten-django.rule: Host(`topten.ziqiang.net.cn`)
+      traefik.http.routers.topten-django.entrypoints: websecure
+      traefik.http.services.topten-django.loadbalancer.server.port: 80
+
+networks:
+  app-net: {}
+  traefik:
+    external: true

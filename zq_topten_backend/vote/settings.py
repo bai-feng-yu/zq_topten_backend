@@ -1,20 +1,20 @@
 import os
 import datetime
 
-IP_NUM = 3      # 每天限制数
-IP_TOTAL = 30    # 每阶限制数
+IP_NUM = 1      # 每天限制数
+IP_TOTAL = 4    # 每阶限制数
 DEVICE_NUM = 1      # 每天限制数
-DEVICE_TOTAL = 30    # 每阶限制数
-VOTE_MIN = 1
-VOTE_MAX = 5
-START_DATE = datetime.date(2022,3,28) #TODO 配置项
-END_DATE = datetime.date(2022,4,4)
-PERIOD = 7
+DEVICE_TOTAL = 4    # 每阶限制数
+VOTE_MIN = 6
+VOTE_MAX = 20
+START_DATE = datetime.date(2024,10,29) #TODO 配置项
+END_DATE = datetime.date(2024,11,3)
+PERIOD = 6
 BASE_DIR = './zq_topten_backend/'
 PIC_PATH = BASE_DIR+'PIC_PATH/'
 PIC_HIS_PATH = BASE_DIR+'PIC_HISTORY_PATH/'
-PIC_URL = '/Photo/'
-PIC_HIS_URL = '/HistoryPhoto/'
+PIC_URL = '/photo/'
+PIC_HIS_URL = '/historyphoto/'
 IP_whiteList = (
     # ('192.168.0.233', '192.168.0.233', 10, 100),  添加其为信任的IP, 信任投票次数为每天10次, 本阶段总共100次
     ('127.0.0.1', '127.0.0.1', 6, 60),

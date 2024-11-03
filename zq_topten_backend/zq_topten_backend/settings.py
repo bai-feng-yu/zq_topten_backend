@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,8 +25,9 @@ SECRET_KEY = 'django-insecure-p#le&u50f)04f-&u^z95vvejzheil#m@*rcq!ln_lco-r2&#$!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['topten.whu.edu.cn','localhost','127.0.0.1','cas.whu.edu.cn']
 
+AUTH_USER_MODEL = 'vote.Member'
 
 # Application definition
 
@@ -37,18 +38,55 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'vote',
-    'rest_framework'
+    'rest_framework',
+    'django_cas_ng',
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_cas_ng.middleware.CASMiddleware',
+]
+
+CORS_ORIGIN_WHITELIST = [
+    'https://topten.whu.edu.cn:80',
+    'https://topten.whu.edu.cn:443',
+    'https://topten.whu.edu.cn:8000',
+    'https://cas.whu.edu.cn:80',
+    'https://cas.whu.edu.cn:443',
+    'https://127.0.0.1:8000',
+    'https://127.0.0.1:80',
+    'https://127.0.0.1:443'
+]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+]
+CORS_ALLOW_HEADERS = [
+    'XMLHttpRequest',
+    'X_FILENAME',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'Pragma',
 ]
 
 ROOT_URLCONF = 'zq_topten_backend.urls'
@@ -117,9 +155,35 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 接入学校cas认证：
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'django_cas_ng.backends.CASBackend',
+)
+# CAS 的地址
+CAS_SERVER_URL = 'https://cas.whu.edu.cn/authserver/login/'
+# CAS 版本
+CAS_VERSION = '2'
+# 存入所有 CAS 服务端返回的 User 数据。
+CAS_APPLY_ATTRIBUTES_TO_USER = True
+#回调地址
+CAS_REDIRECT_URL ='https://topten.whu.edu.cn'
+#登录后回调地址
+CAS_LOGIN_NEXT_PAGE ='https://topten.whu.edu.cn/#/vote'
+#退出登录后回调地址
+CAS_LOGIN_NEXT_PAGE ='https://topten.whu.edu.cn'
+#查询next与根地址是否同域
+CAS_CHECK_NEXT=False
+#重定向强制https协议
+CAS_FORCE_SSL_SERVICE_URL=True
+#next信息存入ticket
+CAS_STORE_NEXT = True
